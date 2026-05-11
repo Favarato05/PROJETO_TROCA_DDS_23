@@ -1,26 +1,35 @@
 // importação do módulo express
 const express = require("express")
-
 const app = express()
-
 // módulo do node para lidar com caminho de arquivos
 const path = require('path')
-
-console.log(path.join(__dirname, ":estou aqui"))
+// Define a porta do servidor
 const port = 3000
 
+// CONFIGURAÇÃO DO EJS E PASTAS DO FRONT END
+// Define o EJS como engine do front
+app.set('view engine', 'ejs')
+// Aponta para o express e ejs onde estão as páginas
+app.set('views', path.join(__dirname, "../client/views"))
+// Deixa a pasta public acessível ao usuário
+app.set(express.static(path.join(__dirname, "../client/public")))
+
+// ROTAS PÚBLICAS
 // Criação de rotas padrão
 app.get("/", (req,res) => {
-    res.status(200).json( {"mensagem": "Olá, seja Bem-vindo"} )
-})
+    // redireciona pra tela de login
+    res.status(200).redirect("/login")
+});
 
+// Rota que retorna a pagina de login
 app.get("/login", (req, res) => { 
-    res.sendFile(path.join(__dirname, "../client/views/auth/login.html"));
-})
+    res.render('auth/login');
+});
 
+// Rota que retorna a página de cadastro de usuário
 app.get("/cadastro", (req, res) => { 
-    res.sendFile(path.join(__dirname, "../client/views/auth/cadastro.html"))
-})
+    res.render('auth/cadastro');
+});
 
 // Importar as rotas de usuario
 const usuariosRoutes = require("./routes/usuarioRoutes.js")
